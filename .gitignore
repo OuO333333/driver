@@ -1,1 +1,10 @@
 *
+
+!.gitignore
+
+!character-device-driver/driver/Makefile
+!character-device-driver/driver/mychardev.c
+
+!character-device-driver/test/Makefile
+!character-device-driver/test/check.c
+!character-device-driver/test/dev.c
