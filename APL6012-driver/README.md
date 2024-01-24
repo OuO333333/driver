@@ -10,7 +10,7 @@ ADC即數位類比轉換器,
   
 ![image](https://github.com/OuO333333/driver/assets/37506309/f7bf3fdf-ae5a-4364-bdd5-8a4b8f85cf4d)  
 ![image](https://github.com/OuO333333/driver/assets/37506309/c7131a38-9024-4fcd-834c-aff07eb85b7c)
-![image](https://github.com/OuO333333/driver/assets/37506309/f8097445-8ed5-4886-8096-3bd8774cf317)
+![image](https://github.com/OuO333333/driver/assets/37506309/f8097445-8ed5-4886-8096-3bd8774cf317)  
 藉由兩個電阻 R1 & R2 來控制 i2c address, 可以看到 R1 跟 R2 是串聯的, 所以 Alert/ADDR 看到的電壓是 VDD * (R2 / (R1 + R2))。
 圖二可以看到 ADDR Input Voltage (% of VDD) 與 Address 的對照。
   
