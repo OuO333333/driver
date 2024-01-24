@@ -23,7 +23,7 @@ APL6012 總共有 20 個引腳,
 其中引腳 AIN1 - AIN15 可以外接電阻, 如外接 NTC thermistors,
 這個外接電阻即是上圖中的 R<sub>NTCx</sub>, 我們還需要另一個電阻 R<sub>INx</sub>,  
 令 R<sub>INx</sub> = 10kΩ,    
-可以藉由這兩個電阻來控制輸入 ADC 的電壓(V<sub>AINx</sub>)在 1V - 3.56V 之間。  
+可以藉由這兩個電阻來控制輸入 ADC 的電壓 V<sub>AINx</sub> 在 1V - 3.56V 之間。  
 可以看到 R<sub>NTCx</sub> 與 R<sub>Cx</sub> 並聯, 直流電中, 電容的電阻值通常被視為無限大,  
 因此這兩個電阻的總電阻是 R<sub>NTCx</sub>, 又這這兩個電阻跟 R<sub>INx</sub> 串聯,  
 令 VDD = 3.3V, 因此輸入 ADC 的電壓 V<sub>AINx</sub> = VDD * R<sub>NTCx</sub> / (R<sub>NTCx</sub> + R<sub>INx</sub>)。  
