@@ -35,8 +35,9 @@ APL6012 總共有 20 個引腳,
 假設最後 ADC 讀出來值為 x, 對應傳感器的溫度為 y&deg;C, 會有以下關係,  
 1\. y 經查表得到 R<sub>y</sub>  
 2\. V<sub>AINx</sub> = VDD * R<sub>y</sub> / (R<sub>y</sub> + R<sub>INx</sub>)  
-3\. x = (V<sub>AINx</sub> - 1V) / 10 mV
-example: 已知 R<sub>INx</sub> = 10kΩ, VDD = 3.3V, x = 101 時,  
+3\. x = (V<sub>AINx</sub> - 1V) / 10 mV  
+example:  
+已知 R<sub>INx</sub> = 10kΩ, VDD = 3.3V, x = 101 時,  
 解得 R<sub>y</sub> = 15581Ω, 經查表得 y 為 15&deg;C
 
 
