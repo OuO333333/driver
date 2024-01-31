@@ -121,3 +121,6 @@ MODULE_DEVICE_TABLE 一般用於動態加載驅動也就是熱插拔的時候使
   
 -------------------------------------------------------------  
   
+當 i2c 子系統偵測到對應的硬體時(這邊為偵測到 device tree 的), 會調用 probe 函數,  
+而 probe 函數的參數 struct i2c_client *client 和 const struct i2c_device_id *id 是由 i2C 子系統傳遞給 probe 函數的,  
+這些參數的值取決於硬體的配置，並在 i2C 子系統掃描硬體並與設備描述相匹配時被設置。
