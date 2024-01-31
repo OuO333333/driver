@@ -112,4 +112,12 @@ static struct i2c_driver apl6012_driver = {
 of_match_table 是用於 device tree 與 driver 的匹配, i2c 的 i2c_device_match 會優先選擇 device tree 做匹配。  
 遠古時期的 linux kernel 似乎有沒 assign id_table 就無法執行 probe 的問題:  
 https://www.cnblogs.com/xiaojiang1025/p/6501956.html  
-但這問題 linux kernel 在好幾年前就解決了, 現在的 linux kernel 在做 device tree 的 match 時不用再 assign id_table。
+但這問題 linux kernel 在好幾年前就解決了, 現在的 linux kernel 在做 device tree 的 match 時不用再 assign id_table。  
+  
+-------------------------------------------------------------  
+  
+MODULE_DEVICE_TABLE 一般用於動態加載驅動也就是熱插拔的時候使用。  
+當 module 被載入時，內核會查詢 MODULE_DEVICE_TABLE 代入的 device table，以確定模組所支援的硬體。
+  
+-------------------------------------------------------------  
+  
