@@ -124,3 +124,71 @@ MODULE_DEVICE_TABLE 一般用於動態加載驅動也就是熱插拔的時候使
 當 i2c 子系統偵測到對應的硬體時(這邊為偵測到 device tree 的), 會調用 probe 函數,  
 而 probe 函數的參數 struct i2c_client *client 和 const struct i2c_device_id *id 是由 i2C 子系統傳遞給 probe 函數的,  
 這些參數的值取決於硬體的配置，並在 i2C 子系統掃描硬體並與設備描述相匹配時被設置。
+  
+-------------------------------------------------------------  
+
+```c
+struct iio_dev *iio;
+struct apl6012 *adc;
+iio = devm_iio_device_alloc(&client->dev, sizeof(*adc));
+adc = iio_priv(iio);
+```
+```c
+/**
+ * iio_device_alloc() - allocate an iio_dev from a driver
+ * @parent:             Parent device.
+ * @sizeof_priv:        Space to allocate for private structure.
+ **/
+struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+{
+        struct iio_dev_opaque *iio_dev_opaque;
+        struct iio_dev *dev;
+        size_t alloc_size;
+
+        alloc_size = sizeof(struct iio_dev_opaque);
+        if (sizeof_priv) { 
+                alloc_size = ALIGN(alloc_size, IIO_ALIGN);
+                alloc_size += sizeof_priv;
+        }
+
+        iio_dev_opaque = kzalloc(alloc_size, GFP_KERNEL);
+        if (!iio_dev_opaque)
+                return NULL;
+
+        dev = &iio_dev_opaque->indio_dev;
+        dev->priv = (char *)iio_dev_opaque +
+                ALIGN(sizeof(struct iio_dev_opaque), IIO_ALIGN);
+
+        dev->dev.parent = parent;
+        dev->dev.groups = dev->groups;
+        dev->dev.type = &iio_device_type;
+        dev->dev.bus = &iio_bus_type;
+        device_initialize(&dev->dev);
+        dev_set_drvdata(&dev->dev, (void *)dev);
+        mutex_init(&dev->mlock);
+        mutex_init(&dev->info_exist_lock);
+        INIT_LIST_HEAD(&iio_dev_opaque->channel_attr_list);
+
+        dev->id = ida_simple_get(&iio_ida, 0, 0, GFP_KERNEL);
+        if (dev->id < 0) {
+                /* cannot use a dev_err as the name isn't available */
+                pr_err("failed to get device id\n");
+                kfree(iio_dev_opaque);
+                return NULL;
+        }
+        dev_set_name(&dev->dev, "iio:device%d", dev->id);
+        INIT_LIST_HEAD(&iio_dev_opaque->buffer_list);
+
+        return dev;
+}
+EXPORT_SYMBOL(iio_device_alloc);
+```
+簡單 trace 過 devm_iio_device_alloc & iio_device_alloc,  
+基本上就是 allocate 一塊大小為 sizeof(struct iio_dev_opaque) + sizeof_priv 的記憶體給 iio_dev_opaque, 並清為0,  
+struct iio_dev_opaque 包含了 iio_dev, 將指標 struct iio_dev *dev 指向 iio_dev_opaque 的 iio_dev(indio_dev),  
+接下來計算 dev -> priv = (char *)iio_dev_opaque + ALIGN(sizeof(struct iio_dev_opaque), IIO_ALIGN),  
+此為儲存 driver private data 的起始記憶體位置,  
+最後開始設定 struct iio_dev *dev 中的 struct device dev, 如 dev->dev.parent = parent, 將 device 指向一開始輸入進來的參數。  
+  
+-------------------------------------------------------------  
+  
