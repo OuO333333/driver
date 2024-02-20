@@ -192,4 +192,19 @@ struct iio_dev_opaque 包含了 iio_dev, 將指標 struct iio_dev *dev 指向 ii
 簡單來說是把 i2c_client 中的 device 搬到 iio_dev 中的 device, 並設定 driver private data 讀起始位置, 所有才會有 adc = iio_priv(iio); 這行。  
   
 -------------------------------------------------------------  
-  
+
+```c
+i2c_set_clientdata(client, iio);
+```
+```c
+static inline void i2c_set_clientdata(struct i2c_client *client, void *data)
+{               
+        dev_set_drvdata(&client->dev, data);
+}
+```
+```c
+static inline void dev_set_drvdata(struct device *dev, void *data)
+{               
+        dev->driver_data = data;
+}
+```
