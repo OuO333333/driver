@@ -188,7 +188,8 @@ EXPORT_SYMBOL(iio_device_alloc);
 struct iio_dev_opaque 包含了 iio_dev, 將指標 struct iio_dev *dev 指向 iio_dev_opaque 的 iio_dev(indio_dev),  
 接下來計算 dev -> priv = (char *)iio_dev_opaque + ALIGN(sizeof(struct iio_dev_opaque), IIO_ALIGN),  
 此為儲存 driver private data 的起始記憶體位置,  
-最後開始設定 struct iio_dev *dev 中的 struct device dev, 如 dev->dev.parent = parent, 將 device 指向一開始輸入進來的參數。  
+最後開始設定 struct iio_dev *dev 中的 struct device dev, 如 dev->dev.parent = parent, 將 device 指向一開始輸入進來的參數,  
+簡單來說是把 i2c_client 中的 device 搬到 iio_dev 中的 device, 並設定 driver private data 讀起始位置。  
   
 -------------------------------------------------------------  
   
