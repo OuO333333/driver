@@ -123,7 +123,7 @@ MODULE_DEVICE_TABLE 一般用於動態加載驅動也就是熱插拔的時候使
   
 當 i2c 子系統偵測到對應的硬體時(這邊為偵測到 device tree 的), 會調用 probe 函數,  
 而 probe 函數的參數 struct i2c_client *client 和 const struct i2c_device_id *id 是由 i2C 子系統傳遞給 probe 函數的,  
-這些參數的值取決於硬體的配置，並在 i2C 子系統掃描硬體並與設備描述相匹配時被設置, 所有才會有 adc = iio_priv(iio); 這行。  
+這些參數的值取決於硬體的配置，並在 i2C 子系統掃描硬體並與設備描述相匹配時被設置。  
   
 -------------------------------------------------------------  
 
@@ -189,7 +189,7 @@ struct iio_dev_opaque 包含了 iio_dev, 將指標 struct iio_dev *dev 指向 ii
 接下來計算 dev -> priv = (char *)iio_dev_opaque + ALIGN(sizeof(struct iio_dev_opaque), IIO_ALIGN),  
 此為儲存 driver private data 的起始記憶體位置,  
 最後開始設定 struct iio_dev *dev 中的 struct device dev, 如 dev->dev.parent = parent, 將 device 指向一開始輸入進來的參數,  
-簡單來說是把 i2c_client 中的 device 搬到 iio_dev 中的 device, 並設定 driver private data 讀起始位置。  
+簡單來說是把 i2c_client 中的 device 搬到 iio_dev 中的 device, 並設定 driver private data 讀起始位置, 所有才會有 adc = iio_priv(iio); 這行。  
   
 -------------------------------------------------------------  
   
