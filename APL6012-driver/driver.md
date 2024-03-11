@@ -208,3 +208,7 @@ static inline void dev_set_drvdata(struct device *dev, void *data)
         dev->driver_data = data;
 }
 ```
+將 iio_dev assign 給 i2c_client, 使得 i2c_client 能存取 iio_dev。  
+  
+-------------------------------------------------------------  
+
