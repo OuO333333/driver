@@ -244,3 +244,21 @@ error_device_register:
   
 -------------------------------------------------------------  
 
+```c
+static int apl6012_remove(struct i2c_client *client)
+{
+	struct iio_dev *iio = i2c_get_clientdata(client);
+	struct apl6012 *adc = iio_priv(iio);
+
+	iio_device_unregister(iio);
+	mutex_destroy(&adc->lock);
+	mutex_destroy(&adc->data_lock);
+
+	return 0;
+}
+```
+處理 driver remove。  
+  
+-------------------------------------------------------------  
+
+
