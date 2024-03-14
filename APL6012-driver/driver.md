@@ -211,4 +211,13 @@ static inline void dev_set_drvdata(struct device *dev, void *data)
 將 iio_dev assign 給 i2c_client, 使得 i2c_client 能存取 iio_dev。  
   
 -------------------------------------------------------------  
+  
+```c
+iio->name = dev_name(&client->dev);
+iio->modes = INDIO_DIRECT_MODE;
+iio->info = &apl6012_info;
+```
+設定 namse, mode, info(iio_info), 其中設定 iio_info 會 assign read_raw。  
+  
+-------------------------------------------------------------  
 
