@@ -216,8 +216,31 @@ static inline void dev_set_drvdata(struct device *dev, void *data)
 iio->name = dev_name(&client->dev);
 iio->modes = INDIO_DIRECT_MODE;
 iio->info = &apl6012_info;
+iio->num_channels = ARRAY_SIZE(apl6012_chan_array);
+iio->channels = apl6012_chan_array;
+
+adc->i2c = client;
 ```
-設定 namse, mode, info(iio_info), 其中設定 iio_info 會 assign read_raw。  
+設定 namse, mode, info(iio_info), num_channels, channels, 其中設定 iio_info 會 assign read_raw。  
+  
+-------------------------------------------------------------  
+
+```c
+err = iio_device_register(iio);
+if (err < 0){
+    dev_err(&client->dev, "APL6012: Couldn't register the device.\n");
+    goto error_device_register;
+}
+dev_err(&client->dev, "APL6012: Probe sucessful!\n");
+return 0;
+
+error_device_register:
+    mutex_destroy(&adc->lock);
+    mutex_destroy(&adc->data_lock);
+    dev_err(&client->dev, "APL6012: Probe fail\n");
+    return err;
+```
+處理 iio_dev 註冊失敗。  
   
 -------------------------------------------------------------  
 
