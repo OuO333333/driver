@@ -1,5 +1,5 @@
 ```c
-module_i2c_driver(apl6012_driver);
+module_i2c_driver(my_driver);
 ```
 ```c
 /**
@@ -43,30 +43,30 @@ module_exit(__driver##_exit);
 ```
 ,  
 ```c
-module_i2c_driver(apl6012_driver);
+module_i2c_driver(my_driver);
 ```
 會先展開成
 ```c
-module_driver(apl6012_driver, i2c_add_driver, i2c_del_driver);
+module_driver(my_driver, i2c_add_driver, i2c_del_driver);
 ```
 再展開成
 ```c
-static int __init apl6012_driver_init(void)
+static int __init my_driver_init(void)
 {
-    return i2c_add_driver(&apl6012_driver);
+    return i2c_add_driver(&my_driver);
 }
-module_init(apl6012_driver_init);
+module_init(my_driver_init);
 
-static void __exit apl6012_driver_exit(void)
+static void __exit my_driver_exit(void)
 {
-    i2c_del_driver(&apl6012_driver);
+    i2c_del_driver(&my_driver);
 }
-module_exit(apl6012_driver_exit);
+module_exit(my_driver_exit);
 ```
 在C語言中, ## 是一個預處理操作符, 用於連接兩個符號（token）。  
 在宏定義中, ## 允許將參數和前綴或後綴連接在一起, 形成一個新的標識符, 這對於在宏定義中創建唯一的標識符是很有用的。  
 如:  
-&nbsp;&nbsp;&nbsp;&nbsp;__driver##_init 會被展開為 apl6012_driver_init。  
+&nbsp;&nbsp;&nbsp;&nbsp;__driver##_init 會被展開為 my_driver_init。  
 &nbsp;&nbsp;&nbsp;&nbsp;__register 會被展開為 i2c_add_driver。  
 &nbsp;&nbsp;&nbsp;&nbsp;__unregister 會被展開為 i2c_del_driver。  
 可以發現展開完跟我們最早接觸的 hello world driver 有點像了:
@@ -99,14 +99,14 @@ module_i2c_driver 也是基於 module_init 跟 module_exit 的。
 -------------------------------------------------------------  
 
 ```c
-static struct i2c_driver apl6012_driver = {
+static struct i2c_driver my_driver = {
 	.driver = {
-		.name = "apl6012",
-		.of_match_table = apl6012_of_match,
+		.name = "my",
+		.of_match_table = my_of_match,
 	},
-	.probe = apl6012_probe,
-	.remove = apl6012_remove,
-	// .id_table = apl6012_id,
+	.probe = my_probe,
+	.remove = my_remove,
+	// .id_table = my_id,
 };
 ```
 of_match_table 是用於 device tree 與 driver 的匹配, i2c 的 i2c_device_match 會優先選擇 device tree 做匹配。  
@@ -129,7 +129,7 @@ MODULE_DEVICE_TABLE 一般用於動態加載驅動也就是熱插拔的時候使
 
 ```c
 struct iio_dev *iio;
-struct apl6012 *adc;
+struct my *adc;
 iio = devm_iio_device_alloc(&client->dev, sizeof(*adc));
 adc = iio_priv(iio);
 ```
@@ -215,9 +215,9 @@ static inline void dev_set_drvdata(struct device *dev, void *data)
 ```c
 iio->name = dev_name(&client->dev);
 iio->modes = INDIO_DIRECT_MODE;
-iio->info = &apl6012_info;
-iio->num_channels = ARRAY_SIZE(apl6012_chan_array);
-iio->channels = apl6012_chan_array;
+iio->info = &my_info;
+iio->num_channels = ARRAY_SIZE(my_chan_array);
+iio->channels = my_chan_array;
 
 adc->i2c = client;
 ```
@@ -228,16 +228,16 @@ adc->i2c = client;
 ```c
 err = iio_device_register(iio);
 if (err < 0){
-    dev_err(&client->dev, "APL6012: Couldn't register the device.\n");
+    dev_err(&client->dev, "my: Couldn't register the device.\n");
     goto error_device_register;
 }
-dev_err(&client->dev, "APL6012: Probe sucessful!\n");
+dev_err(&client->dev, "my: Probe sucessful!\n");
 return 0;
 
 error_device_register:
     mutex_destroy(&adc->lock);
     mutex_destroy(&adc->data_lock);
-    dev_err(&client->dev, "APL6012: Probe fail\n");
+    dev_err(&client->dev, "my: Probe fail\n");
     return err;
 ```
 處理 iio_dev 註冊失敗。  
@@ -245,10 +245,10 @@ error_device_register:
 -------------------------------------------------------------  
 
 ```c
-static int apl6012_remove(struct i2c_client *client)
+static int my_remove(struct i2c_client *client)
 {
 	struct iio_dev *iio = i2c_get_clientdata(client);
-	struct apl6012 *adc = iio_priv(iio);
+	struct my *adc = iio_priv(iio);
 
 	iio_device_unregister(iio);
 	mutex_destroy(&adc->lock);
