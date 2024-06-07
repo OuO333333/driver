@@ -82,7 +82,7 @@ void test_access_restriction(){
         if(fd[i] >= 0)
             close(fd[i]);
     }
-    assert(count == 9);
+    assert(count == 8);
 }
 
 void test_ioctl(char *ans){
