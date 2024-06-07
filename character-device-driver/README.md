@@ -33,7 +33,7 @@ What it do:
 &nbsp;&nbsp;&nbsp;&nbsp;test/check.c:  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;檢查 access restriction 是否為 8, r/w operation, ioctl operation  
 &nbsp;&nbsp;&nbsp;&nbsp;test/pthread.c:  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;環境為 Ununtu 22.04, kernel  version 為 6.5.0-35-generic, 實驗在不同 Preemption Mode 下的 Preemption 行為。  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;環境為 Ununtu 22.04, kernel  version 為 6.5.0-35-generic, 實驗在 3 種不同 Preemption Mode 下的 might_sleep(); 的行為。  
 
 Reference:  
     &nbsp;&nbsp;&nbsp;&nbsp;character device drivers:  
