@@ -222,15 +222,15 @@ static ssize_t mychardev_read(struct file *file, char __user *buf, size_t count,
 
     printk("MYCHARDEV: Device read");
     // below for pthread.c
-    // unsigned long end_time = jiffies + msecs_to_jiffies(6000); // 計算 5 秒後的結束時間
-    // while (time_before(jiffies, end_time)) {
-    //     mdelay(1); // 每次循環延遲 1 毫秒
-    // }
-    // might_sleep();
-    // unsigned long end_time2 = jiffies + msecs_to_jiffies(6000); // 計算 5 秒後的結束時間
-    // while (time_before(jiffies, end_time2)) {
-    //     mdelay(1); // 每次循環延遲 1 毫秒
-    // }
+    unsigned long end_time = jiffies + msecs_to_jiffies(6000); // 計算 5 秒後的結束時間
+    while (time_before(jiffies, end_time)) {
+        mdelay(1); // 每次循環延遲 1 毫秒
+    }
+    //might_sleep();
+    unsigned long end_time2 = jiffies + msecs_to_jiffies(6000); // 計算 5 秒後的結束時間
+    while (time_before(jiffies, end_time2)) {
+        mdelay(1); // 每次循環延遲 1 毫秒
+    }
 
     if (count > datalen) {
         count = datalen;
