@@ -16,7 +16,7 @@ How to use:
   &nbsp;&nbsp;&nbsp;&nbsp;In test/pthread.c:  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. sudo make   
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. echo "voluntary" | sudo tee /sys/kernel/debug/sched/preempt  
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. sudo ./pthread
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. sudo ./pthread  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. sudo taskset --cpu-list 0 ./pthread
   
 What it do:  
