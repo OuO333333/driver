@@ -11,6 +11,10 @@ OBJS2 = $(FILE_NAME2).o
 EXEC2 = $(FILE_NAME2)
 FILE_NAME2 = dev
 
+OBJS3 = $(FILE_NAME3).o
+EXEC3 = $(FILE_NAME3)
+FILE_NAME3 = pthread
+
 
 all:
 	# generate the object file
@@ -21,6 +25,8 @@ all:
 	$(CC) $(CFLAGS) -c -o $(OBJS2) $(FILE_NAME2).c
 	# generate the executable directly
 	$(CC) $(OBJS2) -o $(EXEC2)
+	# generate the object file
+	gcc pthread.c -lpthread -o pthread
 
 check:
 	@./$(EXEC); \
@@ -33,3 +39,4 @@ check:
 clean:
 	rm -f $(OBJS) $(EXEC)
 	rm -f $(OBJS2) $(EXEC2)
+	rm -f $(OBJS3) $(EXEC3)

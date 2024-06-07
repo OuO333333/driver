@@ -16,6 +16,8 @@
 #define RD_BUFFER_INDEX _IOR('a','b',int32_t*)
 #define WR_BUFFER _IOW('a','c',char*)
 #define RD_BUFFER _IOR('a','d',char*)
+#define ENABLE_PREEMPT _IO('a', 3)
+#define DISABLE_PREEMPT _IO('a', 4)
 
 static int mychardev_open(struct inode *inode, struct file *file);
 static int mychardev_release(struct inode *inode, struct file *file);
@@ -123,7 +125,7 @@ static int mychardev_open(struct inode *inode, struct file *file)
     struct mychar_device_data *mychar_data = &mychardev_data[minor_num];
 
     spin_lock(&mychar_data -> spinlock);
-    while(mychar_data -> process_count != 0){
+    while(mychar_data -> process_count > 1){
         spin_unlock(&mychar_data -> spinlock);
         if(file -> f_flags & O_NONBLOCK){
             printk("MYCHARDEV: Device O_NONBLOCK open failed\n");
@@ -139,7 +141,7 @@ static int mychardev_open(struct inode *inode, struct file *file)
         * 若多個 process 通過了 wait_event_interruptible, 後面還有一個 spin_lock,
         * 因此仍只有一個 process 能執行到 mychar_data -> process_count++ 的部份		
         */
-        if(wait_event_interruptible(*wq, mychar_data -> process_count == 0)){
+        if(wait_event_interruptible(*wq, mychar_data -> process_count < 2)){
             return -ERESTARTSYS; /* signal received or interrupted */
         }
         spin_lock(&mychar_data -> spinlock);
@@ -165,7 +167,7 @@ static int mychardev_release(struct inode *inode, struct file *file)
     mychar_data -> process_count--;
     temp = mychar_data -> process_count;
     spin_unlock(&mychar_data -> spinlock);
-    if(temp == 0)
+    if(temp < 1)
         wake_up_interruptible(&mychar_data -> wait_queue);
     return 0;
 }
@@ -207,6 +209,15 @@ static long mychardev_ioctl(struct file *file, unsigned int cmd, unsigned long a
                 printk("Data Read : Err!\n");
             }
             break;
+        case ENABLE_PREEMPT:
+            preempt_enable();
+            printk("Preemption enabled.\n");
+            break;
+
+        case DISABLE_PREEMPT:
+            preempt_disable();
+            printk("Preemption disabled.\n");
+            break;
         default:
             printk("Default\n");
             break;
@@ -221,6 +232,9 @@ static ssize_t mychardev_read(struct file *file, char __user *buf, size_t count,
     struct mychar_device_data *mychar_data = &mychardev_data[minor_num];
 
     printk("MYCHARDEV: Device read");
+    mdelay(6000);
+    //might_sleep();
+    mdelay(6000);
     // printk("Reading device: %d\n", minor_num);
     // printk("Copied %zd bytes from the device\n", count);
     // printk("mychar_data -> buffer: %s\n", mychar_data -> buffer);
