@@ -8,6 +8,7 @@
 !character-device-driver/test/Makefile
 !character-device-driver/test/check.c
 !character-device-driver/test/dev.c
+!character-device-driver/test/pthread.c
 
 !APL6012-driver/README.md
 !APL6012-driver/APL6012.pdf
