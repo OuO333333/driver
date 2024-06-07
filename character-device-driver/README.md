@@ -26,7 +26,13 @@ What it do:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maintain a buffer and perform r/w operations on it  
 &nbsp;&nbsp;&nbsp;&nbsp;ioctl operation:  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use ioctl operation for more customized behavior on devices  
-  
+&nbsp;&nbsp;&nbsp;&nbsp;test/dev.c:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;對 character device driver 的 buffer 進行操作。  
+&nbsp;&nbsp;&nbsp;&nbsp;test/check.c:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;檢查 access restriction 是否為 8, r/w operation, ioctl operation  
+&nbsp;&nbsp;&nbsp;&nbsp;test/pthread.c:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;環境為 Ununtu 22.04, kernel  version 為 6.5.0-35-generic, 實驗在不同 Preemption Mode 下的 Preemption 行為。  
+
 Reference:  
     &nbsp;&nbsp;&nbsp;&nbsp;character device drivers:  
     &nbsp;&nbsp;&nbsp;&nbsp;https://linux-kernel-labs.github.io/refs/heads/master/labs/device_drivers.html  
