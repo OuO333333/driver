@@ -16,8 +16,6 @@
 #define RD_BUFFER_INDEX _IOR('a','b',int32_t*)
 #define WR_BUFFER _IOW('a','c',char*)
 #define RD_BUFFER _IOR('a','d',char*)
-#define ENABLE_PREEMPT _IO('a', 3)
-#define DISABLE_PREEMPT _IO('a', 4)
 
 static int mychardev_open(struct inode *inode, struct file *file);
 static int mychardev_release(struct inode *inode, struct file *file);
@@ -209,15 +207,6 @@ static long mychardev_ioctl(struct file *file, unsigned int cmd, unsigned long a
                 printk("Data Read : Err!\n");
             }
             break;
-        case ENABLE_PREEMPT:
-            preempt_enable();
-            printk("Preemption enabled.\n");
-            break;
-
-        case DISABLE_PREEMPT:
-            preempt_disable();
-            printk("Preemption disabled.\n");
-            break;
         default:
             printk("Default\n");
             break;
@@ -232,18 +221,16 @@ static ssize_t mychardev_read(struct file *file, char __user *buf, size_t count,
     struct mychar_device_data *mychar_data = &mychardev_data[minor_num];
 
     printk("MYCHARDEV: Device read");
-    unsigned long end_time = jiffies + msecs_to_jiffies(6000); // 计算5秒后的结束时间
-    while (time_before(jiffies, end_time)) {
-        mdelay(1); // 每次循环延迟100毫秒
-    }
-    //might_sleep();
-    unsigned long end_time2 = jiffies + msecs_to_jiffies(6000); // 计算5秒后的结束时间
-    while (time_before(jiffies, end_time2)) {
-        mdelay(1); // 每次循环延迟100毫秒
-    }
-    // printk("Reading device: %d\n", minor_num);
-    // printk("Copied %zd bytes from the device\n", count);
-    // printk("mychar_data -> buffer: %s\n", mychar_data -> buffer);
+    // below for pthread.c
+    // unsigned long end_time = jiffies + msecs_to_jiffies(6000); // 計算 5 秒後的結束時間
+    // while (time_before(jiffies, end_time)) {
+    //     mdelay(1); // 每次循環延遲 1 毫秒
+    // }
+    // might_sleep();
+    // unsigned long end_time2 = jiffies + msecs_to_jiffies(6000); // 計算 5 秒後的結束時間
+    // while (time_before(jiffies, end_time2)) {
+    //     mdelay(1); // 每次循環延遲 1 毫秒
+    // }
 
     if (count > datalen) {
         count = datalen;

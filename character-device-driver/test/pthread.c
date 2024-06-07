@@ -9,8 +9,6 @@
 #include <sys/time.h>
 #include <sys/ioctl.h> // 添加这个头文件
 
-#define ENABLE_PREEMPT _IO('a', 3)
-#define DISABLE_PREEMPT _IO('a', 4)
 void *hi_prio_t1(void *p)
 {
     int fd;
@@ -23,26 +21,8 @@ void *hi_prio_t1(void *p)
     }
     struct timeval startAt, stopAt;
     gettimeofday(&startAt, NULL);
-
     printf("T1 start at %ld.%09ld\n", startAt.tv_sec, startAt.tv_usec);
-    /*
-    if (ioctl(fd, DISABLE_PREEMPT) < 0)
-    {
-        perror("Failed to disable preemption");
-        close(fd);
-        return NULL;
-    }
-    */
     sleep(3);
-    /*
-    printf("Enabling preemption...\n");
-    if (ioctl(fd, ENABLE_PREEMPT) < 0)
-    {
-        perror("Failed to enable preemption");
-        close(fd);
-        return NULL;
-    }
-    */
     gettimeofday(&stopAt, NULL);
     double elapsed = (stopAt.tv_sec - startAt.tv_sec) + (stopAt.tv_usec - startAt.tv_usec) / 1000000000.0;
     printf("T1 stop at %ld.%09ld. elapse: %.9f seconds.\n",
@@ -90,7 +70,7 @@ void run_t1()
     struct sched_param param;
 
     pthread_attr_init(&attr);
-    //pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
+    // pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
     pthread_attr_setschedpolicy(&attr, SCHED_RR);
 
     param.sched_priority = 50;
@@ -106,7 +86,7 @@ void run_t2()
     struct sched_param param;
 
     pthread_attr_init(&attr);
-    //pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
+    // pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
     pthread_attr_setschedpolicy(&attr, SCHED_RR);
 
     param.sched_priority = 30;
@@ -130,7 +110,6 @@ int main(int argc, char *argv[])
         struct sched_param param;
 
         pthread_attr_init(&attr);
-        //pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
         pthread_attr_setschedpolicy(&attr, SCHED_RR);
 
         param.sched_priority = 50;
