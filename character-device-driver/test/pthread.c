@@ -27,6 +27,7 @@ void *hi_prio_t1(void *p)
     double elapsed = (stopAt.tv_sec - startAt.tv_sec) + (stopAt.tv_usec - startAt.tv_usec) / 1000000000.0;
     printf("T1 stop at %ld.%09ld. elapse: %.9f seconds.\n",
            stopAt.tv_sec, stopAt.tv_usec, elapsed);
+    close(fd);
     return NULL;
 }
 
@@ -60,6 +61,7 @@ void *low_prio_t2(void *p)
     double elapsed = (stopAt.tv_sec - startAt.tv_sec) + (stopAt.tv_usec - startAt.tv_usec) / 1000000000.0;
     printf("T2 stop at %ld.%09ld. elapse: %.9f seconds.\n",
            stopAt.tv_sec, stopAt.tv_usec, elapsed);
+    close(fd);
     return NULL;
 }
 
@@ -70,11 +72,11 @@ void run_t1()
     struct sched_param param;
 
     pthread_attr_init(&attr);
-    // pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
     pthread_attr_setschedpolicy(&attr, SCHED_RR);
 
     param.sched_priority = 50;
     pthread_attr_setschedparam(&attr, &param);
+    pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
     pthread_create(&t1, &attr, hi_prio_t1, NULL);
 
     pthread_join(t1, NULL);
@@ -86,11 +88,11 @@ void run_t2()
     struct sched_param param;
 
     pthread_attr_init(&attr);
-    // pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
     pthread_attr_setschedpolicy(&attr, SCHED_RR);
 
     param.sched_priority = 30;
     pthread_attr_setschedparam(&attr, &param);
+    pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
     pthread_create(&t2, &attr, low_prio_t2, NULL);
 
     pthread_join(t2, NULL);
