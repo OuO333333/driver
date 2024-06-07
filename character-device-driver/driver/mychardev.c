@@ -232,9 +232,15 @@ static ssize_t mychardev_read(struct file *file, char __user *buf, size_t count,
     struct mychar_device_data *mychar_data = &mychardev_data[minor_num];
 
     printk("MYCHARDEV: Device read");
-    mdelay(6000);
+    unsigned long end_time = jiffies + msecs_to_jiffies(6000); // 计算5秒后的结束时间
+    while (time_before(jiffies, end_time)) {
+        mdelay(1); // 每次循环延迟100毫秒
+    }
     //might_sleep();
-    mdelay(6000);
+    unsigned long end_time2 = jiffies + msecs_to_jiffies(6000); // 计算5秒后的结束时间
+    while (time_before(jiffies, end_time2)) {
+        mdelay(1); // 每次循环延迟100毫秒
+    }
     // printk("Reading device: %d\n", minor_num);
     // printk("Copied %zd bytes from the device\n", count);
     // printk("mychar_data -> buffer: %s\n", mychar_data -> buffer);
