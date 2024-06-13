@@ -1,13 +1,10 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
 #include <sys/time.h>
-#include <sys/ioctl.h> // 添加这个头文件
 
 void *hi_prio_t1(void *p)
 {
